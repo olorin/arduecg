@@ -6,14 +6,16 @@ Work in progress, doesn't do much yet.
 
 # Building
 
-```sh
-make
-AVR_PORT=/path/to/your/device make upload
-```
+This project uses [sudar's Arduino Makefile
+template](https://github.com/sudar/Arduino-Makefile); it's a submodule
+of this repository, so make sure it's cloned before building.
 
-The included Makefile has been tested on Arch Linux and OpenBSD 5.6;
-it'll probably work on OS X and is unlikely to do so without
-modification on Windows.
+```sh
+export MONITOR_PORT=/path/to/your/device
+export ARDUINO_DIR=/path/to/arduino/application/directory
+make
+make upload
+```
 
 ## Dependencies
 

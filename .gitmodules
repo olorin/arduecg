@@ -1,0 +1,3 @@
+[submodule "lib/ardmk"]
+	path = lib/ardmk
+	url = https://github.com/sudar/Arduino-Makefile
