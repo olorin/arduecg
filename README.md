@@ -8,7 +8,7 @@ Work in progress, doesn't do much yet.
 
 ```sh
 make
-AVR_PORT=/path/to/your/device upload
+AVR_PORT=/path/to/your/device make upload
 ```
 
 The included Makefile has been tested on Arch Linux and OpenBSD 5.6;
