@@ -13,7 +13,7 @@ Work in progress, doesn't do much yet.
 
 # Preparation
 
- - Format the SD card to FAT16.
+ - Format the SD card to FAT32.
 
 # Building
 
