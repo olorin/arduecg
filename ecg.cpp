@@ -1,4 +1,6 @@
 #include <avr/io.h>
+#include <SD.h>
+#include <Arduino.h>
 
 #define ECG_CHANNELS 6
 #define SAMPLE_RATE 256
