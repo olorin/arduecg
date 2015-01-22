@@ -46,15 +46,16 @@ make upload
 The data shall be stored in one or more files on the SD card. A new
 file shall be created
  - when the device is powered on (start of new session);
- - when the current session timer exceeds T.
+ - when the current session timer exceeds `0xffffff` (around 1193 hours
+   or just under fifty days).
 
 A file shall consist of a file header followed by zero or more
 dataframes.
 
 A file header shall be eleven bytes as follows:
 
- - 1:     Magic number, `0xec.
- - 2:     Magic number, `0x09.
+ - 1:     Magic number, `0xec`.
+ - 2:     Magic number, `0x09`.
  - 3:     Format version, `0x00`.
  - 4-11:  Unsigned big-endian integer representing the number of
           milliseconds since 1970-01-01T00:00:00:00Z at the start of the
