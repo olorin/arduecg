@@ -2,6 +2,8 @@
 #include <SD.h>
 #include <Arduino.h>
 
+#define SD_CHIPSELECT 4
+
 #define ECG_CHANNELS 6
 #define SAMPLE_RATE 256
 #define SAMPLE_SIZE 2
@@ -13,16 +15,26 @@
 uint8_t out_buf[PACKET_SIZE];
 uint8_t counter;
 
-void init()
+int init_sd(int chipselect) 
 {
-	int i;
+	if (!SD.begin(chipselect)) {
+		return -1;
+	}
+	return 0;
+}
+
+int init_ecg()
+{
 	counter = 0;
 	memset(out_buf, 0, PACKET_SIZE);
+	return init_sd(SD_CHIPSELECT);
 }
 
 int main(void) 
 {
-	init();
+	if (init_ecg() != 0) {
+		return -1;
+	}
 	for (;;) {
 		out_buf[0] = counter;
 		counter++;
