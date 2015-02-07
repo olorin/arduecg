@@ -33,8 +33,8 @@ int main(void)
 		return -1;
 	}
 	for (;;) {
-		frame_buf[0] = counter;
+		frame_buf[0] = frame_counter;
 		// Counter will overflow at 256.
-		counter++;
+		frame_counter++;
 	}
 }
