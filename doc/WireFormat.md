@@ -9,26 +9,24 @@ file shall be created
 A file shall consist of a file header followed by zero or more
 dataframes.
 
-A file header shall be eleven bytes as follows:
+A file header shall be `16` bytes as follows:
 
  - 1:     Magic number, `0xec`.
  - 2:     Magic number, `0x09`.
  - 3:     Format version, `0x00`.
- - 4-11:  Unsigned big-endian integer representing the number of
+ - 4-6:   Unused.
+ - 7-14:  Unsigned big-endian integer representing the number of
           milliseconds since 1970-01-01T00:00:00:00Z at the start of the
           session.
+ - 15-16: Unsigned big-endian integer `S`, the number of channels
+          (equivalently, samples per frame).
 
-A dataframe shall be seventeen bytes as follows:
+A dataframe shall be `N = 8 + 4S` bytes as follows:
 
  - 1:     Packet counter which cycles from `0x00` to `0xff`.
  - 2-5:   Unsigned 32-bit big-endian integer representing the time in
           milliseconds since the start of the session.
- - 6-7:   Channel 0 sample.
- - 8-9:   Channel 1 sample.
- - 10-11: Channel 2 sample.
- - 12-13: Channel 3 sample.
- - 14-15: Channel 4 sample.
- - 16-17: Channel 5 sample.
+ - 5-8:   Unused.
+ - 9-N:   `S` sample frames.
 
-A sample shall be a two-byte big-endian unsigned integer between `0x0000`
-and `0x03ff`.
+A sample frame shall be a 4-byte big-endian unsigned integer.
