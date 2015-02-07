@@ -6,9 +6,10 @@
 #include "session.h"
 #include "frame.h"
 
-#define SD_CHIPSELECT 4
 #define SAMPLE_RATE 256
 
+#define PIN_SD_HW_CHIPSELECT 10
+#define PIN_SD_CHIPSELECT 10
 #define PIN_ERROR_LED 13
 
 #define DEBUG 1
@@ -39,7 +40,8 @@ void state_run()
 
 int init_sd() 
 {
-	if (!SD.begin(SD_CHIPSELECT)) {
+	pinMode(PIN_SD_HW_CHIPSELECT, OUTPUT);
+	if (!SD.begin(PIN_SD_CHIPSELECT)) {
 		return -1;
 	}
 	return 0;
