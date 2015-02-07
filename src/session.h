@@ -15,4 +15,5 @@ session* session_init(uint64_t timestamp, uint16_t chans);
 
 int session_write(session *s, uint8_t *buf, size_t len);
 
+void session_close(session *s);
 #endif

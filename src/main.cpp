@@ -24,7 +24,15 @@ int init_ecg()
 {
 	frame_counter = 0;
 	memset(frame_buf, 0, FRAME_SIZE);
-	return init_sd();
+	if (init_sd() < 0) {
+		return -1;
+	}
+	uint64_t init_time = 1423297511ULL; // XXX: actually get time
+	session *s = session_init(init_time, FRAME_CHANNELS);
+	if (s == NULL) {
+		return -2;
+	}
+	return 0;
 }
 
 int main(void) 

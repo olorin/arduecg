@@ -31,7 +31,7 @@ int session_write(session *s, uint8_t *buf, size_t len)
 	return written;
 }
 
-session* init_session(uint64_t timestamp, uint16_t channels)
+session* session_init(uint64_t timestamp, uint16_t channels)
 {
 	session *s = (session*) malloc(sizeof(session));
 	if (s == NULL) {
@@ -49,4 +49,9 @@ session* init_session(uint64_t timestamp, uint16_t channels)
 	}
 	session_write(s, buf, SESSION_HEADER_SIZE);
 	return s;
+}
+
+void session_close(session *s)
+{
+	s->fh.close();
 }
