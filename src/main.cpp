@@ -22,7 +22,6 @@ void state_error()
 	#ifdef DEBUG
 	Serial.println("Entering error state.");
 	#endif
-	pinMode(PIN_ERROR_LED, OUTPUT);
 	for (;;) {
 		digitalWrite(PIN_ERROR_LED, HIGH);
 		delay(500);
@@ -33,30 +32,25 @@ void state_error()
 
 void state_run()
 {
-	for (;;) {
-		// do stuff
-	}
-}
-
-int init_sd() 
-{
-	pinMode(PIN_SD_HW_CHIPSELECT, OUTPUT);
-	if (!SD.begin(PIN_SD_CHIPSELECT)) {
-		return -1;
-	}
-	return 0;
+	#ifdef DEBUG
+	Serial.println("In run state.");
+	delay(100);
+	#endif
 }
 
 int init_ecg()
 {
 	frame_counter = 0;
 	memset(frame_buf, 0, FRAME_SIZE);
-	if (init_sd() < 0) {
+	if (!SD.begin(PIN_SD_CHIPSELECT)) {
 		#ifdef DEBUG
 		Serial.println("Could not initialize SD card.");
 		#endif
 		return -1;
 	}
+	#ifdef DEBUG
+	Serial.println("Initializing first session.");
+	#endif
 	uint64_t init_time = 1423297511ULL; // XXX: actually get time
 	session *s = session_init(init_time, FRAME_CHANNELS);
 	if (s == NULL) {
@@ -68,15 +62,19 @@ int init_ecg()
 	return 0;
 }
 
-int main(void) 
+void setup(void) 
 {
+	pinMode(PIN_ERROR_LED, OUTPUT);
+	pinMode(PIN_SD_HW_CHIPSELECT, OUTPUT);
 	#ifdef DEBUG
 	Serial.begin(9600);
 	Serial.println("ecg-datalogger initializing.");
 	#endif
 	if (init_ecg() != 0) {
 		state_error();
-	} else {
-		state_run();
 	}
+}
+
+void loop(void) {
+	state_run();
 }
