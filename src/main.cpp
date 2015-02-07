@@ -9,8 +9,8 @@
 #define SAMPLE_RATE 256
 
 #define PIN_SD_HW_CHIPSELECT 10
-#define PIN_SD_CHIPSELECT 10
-#define PIN_ERROR_LED 13
+#define PIN_SD_CHIPSELECT 4
+#define PIN_ERROR_LED 14
 
 #define DEBUG 1
 
