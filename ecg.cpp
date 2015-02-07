@@ -2,17 +2,14 @@
 #include <SD.h>
 #include <Arduino.h>
 
+#include "bits.h"
+#include "session.h"
+#include "frame.h"
+
 #define SD_CHIPSELECT 4
-
-#define ECG_CHANNELS 6
 #define SAMPLE_RATE 256
-#define SAMPLE_SIZE 2
 
-/* Packets are two bytes per channel plus one byte for the counter.
- * Channels have two-byte big-endian values. */
-#define PACKET_SIZE (ECG_CHANNELS * SAMPLE_SIZE + 1)
-
-uint8_t out_buf[PACKET_SIZE];
+uint8_t out_buf[FRAME_SIZE];
 uint8_t counter;
 
 int init_sd(int chipselect) 
@@ -26,7 +23,7 @@ int init_sd(int chipselect)
 int init_ecg()
 {
 	counter = 0;
-	memset(out_buf, 0, PACKET_SIZE);
+	memset(out_buf, 0, FRAME_SIZE);
 	return init_sd(SD_CHIPSELECT);
 }
 
@@ -37,6 +34,7 @@ int main(void)
 	}
 	for (;;) {
 		out_buf[0] = counter;
+		// Counter will overflow at 256.
 		counter++;
 	}
 }
