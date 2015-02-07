@@ -24,6 +24,7 @@ of this repository, so make sure it's cloned before building.
 ```sh
 export MONITOR_PORT=/path/to/your/device
 export ARDUINO_DIR=/path/to/arduino/application/directory
+cd src
 make
 make upload
 ```
