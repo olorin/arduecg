@@ -1,5 +1,5 @@
-#ifndef H_ECG_BITS
-#define H_ECG_BITS
+#ifndef H_BITS
+#define H_BITS
 
 #include <stdint.h>
 
