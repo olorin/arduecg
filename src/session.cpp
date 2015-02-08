@@ -46,7 +46,7 @@ int get_fname(char *fname, int base_suffix)
 	fname[10] = '\0';
 	char valid = 0;
 	while (!valid && suf < 0x1000) {
-		snprintf(fname+7, 4, "%3x", suf);
+		snprintf(fname+7, 4, "%03x", suf);
 		if (!SD.exists(fname)) {
 			valid = 1;
 		}
@@ -67,8 +67,8 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 	int next_suffix = get_fname(fname, 0);
 	if (next_suffix < 0) {
 		#ifdef DEBUG
-		Serial.println("Could not find an unused filename.")
-		Serial.println("Is the SD card full?")
+		Serial.println("Could not find an unused filename.");
+		Serial.println("Is the SD card full?");
 		#endif
 		free(s);
 		return NULL;
@@ -80,7 +80,7 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 		#ifdef DEBUG
 		Serial.print("Could not open file ");
 		Serial.print(fname);
-		Serial.print(" for writing.");
+		Serial.println(" for writing.");
 		#endif
 		free(s);
 		return NULL;
