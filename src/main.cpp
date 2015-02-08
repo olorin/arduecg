@@ -10,7 +10,7 @@
 
 #define PIN_SD_HW_CHIPSELECT 10
 #define PIN_SD_CHIPSELECT 4
-#define PIN_ERROR_LED 14
+#define PIN_ERROR_LED 9
 
 #define DEBUG 1
 

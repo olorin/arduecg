@@ -9,6 +9,7 @@
 typedef struct {
 	File fh;
 	uint64_t init_time;
+	int next_suffix;
 } session;
 
 session* session_init(uint64_t timestamp, uint16_t chans);

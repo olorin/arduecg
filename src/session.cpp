@@ -31,6 +31,28 @@ int session_write(session *s, uint8_t *buf, size_t len)
 	return written;
 }
 
+// Given a *char of length at least 11, get_fname stores a string of the
+// form "ecgses.XXX", where XXX is a hexadecimal integer between 0x0 and
+// 0xfff. If no such unused filename exists -1 will be returned,
+// otherwise the value of the integer used for the suffix plus one
+// (assuming contiguity of session files, this is likely to be valid for
+// the next one).
+int get_fname(char *fname, int base_suffix)
+{
+	int suf = base_suffix;
+	strncpy(fname, "ecgses.XXX", 10);
+	fname[10] = '\0';
+	char valid = 0;
+	while (!valid && suf < 0x1000) {
+		snprintf(fname+7, 4, "%3x", suf);
+		if (!SD.exists(fname)) {
+			valid = 1;
+		}
+		suf++;
+	}
+	return (valid ? suf : -1);
+}
+
 session* session_init(uint64_t timestamp, uint16_t channels)
 {
 	session *s = (session*) malloc(sizeof(session));
@@ -39,12 +61,17 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 	}
 	uint8_t buf[SESSION_HEADER_SIZE];
 	init_session_header(buf, timestamp, channels);
-	char fname[33];
-	strncpy(fname, "ecg/session_", 12);
-	snprintf(fname+12, 21, "%llu", timestamp);
+	char fname[11];
+	int next_suffix = get_fname(fname, 0);
+	if (next_suffix < 0) {
+		free(s);
+		return NULL;
+	}
+	s->next_suffix = next_suffix;
 	s->init_time = timestamp;
 	s->fh = SD.open(fname, FILE_WRITE);
 	if (!s->fh) {
+		free(s);
 		return NULL;
 	}
 	session_write(s, buf, SESSION_HEADER_SIZE);
