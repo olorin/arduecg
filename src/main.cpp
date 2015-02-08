@@ -3,6 +3,7 @@
 #include <Arduino.h>
 
 #include "bits.h"
+#include "ecg.h"
 #include "session.h"
 #include "frame.h"
 #include "config.h"
@@ -25,10 +26,9 @@ void state_error()
 
 void state_run()
 {
-	#ifdef DEBUG
-	Serial.println("In run state.");
+	uint8_t buf[24];
+	read_samples(buf);
 	delay(100);
-	#endif
 }
 
 int init_ecg()
