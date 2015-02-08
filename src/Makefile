@@ -13,8 +13,8 @@ AVRDDUDE          = /usr/bin/avrdude
 
 ARDUINO_LIBS      = SPI SD
 PROJECT_DIR       = $(CURDIR)
-ARDMK_DIR         = $(PROJECT_DIR)/lib/ardmk
-USER_LIB_PATH    :=  $(PROJECT_DIR)/lib
+ARDMK_DIR         = $(PROJECT_DIR)/../lib/ardmk
+USER_LIB_PATH    :=  $(PROJECT_DIR)/../lib
 CFLAGS_STD        = -std=gnu11
 CXXFLAGS_STD      = -std=gnu++11
 CXXFLAGS         += -pedantic -Wall -Wextra
