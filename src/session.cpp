@@ -18,12 +18,12 @@ void init_session_header(uint8_t* buf, uint64_t timestamp, uint16_t channels)
 	buf[4] = 0x00; // Unused 2.
 	buf[5] = 0x00; // Unused 3.
 	uint16_t be_channels = swap_endian_16(channels);
-	memcpy(&(buf[6]), &be_channels, 2);
+	memcpy(buf+6, &be_channels, 2);
 	// Last eight bytes are for the timestamp.
 	// XXX: this assumes we're compiled little-endian. Better to make it
 	//      endianness-agnostic.
 	uint64_t be_ts = swap_endian_64(timestamp);
-	memcpy(&(buf[8]), &be_ts, 8);
+	memcpy(buf+8, &be_ts, 8);
 }
 
 int session_write(session *s, uint8_t *buf, size_t len)
@@ -60,8 +60,6 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 	if (s == NULL) {
 		return NULL;
 	}
-	uint8_t buf[SESSION_HEADER_SIZE];
-	init_session_header(buf, timestamp, channels);
 	char fname[11];
 	int next_suffix = get_fname(fname, 0);
 	if (next_suffix < 0) {
@@ -84,6 +82,15 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 		free(s);
 		return NULL;
 	}
+	uint8_t buf[SESSION_HEADER_SIZE];
+	#ifdef DEBUG
+	Serial.print("Writing session header: ");
+	for (int i = 0; i < 16; i++) {
+		Serial.print(buf[i], HEX);
+	}
+	Serial.print('\n');
+	#endif
+	init_session_header(buf, timestamp, channels);
 	session_write(s, buf, SESSION_HEADER_SIZE);
 	return s;
 }
