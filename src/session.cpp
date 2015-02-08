@@ -42,8 +42,7 @@ int session_write(session *s, uint8_t *buf, size_t len)
 int get_fname(char *fname, int base_suffix)
 {
 	int suf = base_suffix;
-	strncpy(fname, "ecgses.XXX", 10);
-	fname[10] = '\0';
+	strncpy(fname, "ecgses.", 7);
 	char valid = 0;
 	while (!valid && suf < 0x1000) {
 		snprintf(fname+7, 4, "%03x", suf);
