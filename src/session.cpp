@@ -7,6 +7,8 @@
 #include "session.h"
 #include "bits.h"
 
+#include "config.h"
+
 void init_session_header(uint8_t* buf, uint64_t timestamp, uint16_t channels)
 {
 	buf[0] = 0xec; // Magic #1.
@@ -75,6 +77,11 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 	s->init_time = timestamp;
 	s->fh = SD.open(fname, FILE_WRITE);
 	if (!s->fh) {
+		#ifdef DEBUG
+		Serial.print("Could not open file ");
+		Serial.print(fname);
+		Serial.print(" for writing.");
+		#endif
 		free(s);
 		return NULL;
 	}
