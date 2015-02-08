@@ -91,4 +91,5 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 void session_close(session *s)
 {
 	s->fh.close();
+	free(s);
 }
