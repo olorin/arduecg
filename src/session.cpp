@@ -64,6 +64,10 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 	char fname[11];
 	int next_suffix = get_fname(fname, 0);
 	if (next_suffix < 0) {
+		#ifdef DEBUG
+		Serial.println("Could not find an unused filename.")
+		Serial.println("Is the SD card full?")
+		#endif
 		free(s);
 		return NULL;
 	}

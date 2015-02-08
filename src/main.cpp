@@ -5,14 +5,7 @@
 #include "bits.h"
 #include "session.h"
 #include "frame.h"
-
-#define SAMPLE_RATE 256
-
-#define PIN_SD_HW_CHIPSELECT 10
-#define PIN_SD_CHIPSELECT 4
-#define PIN_ERROR_LED 9
-
-#define DEBUG 1
+#include "config.h"
 
 uint8_t frame_buf[FRAME_SIZE];
 uint8_t frame_counter;
