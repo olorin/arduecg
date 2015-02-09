@@ -33,6 +33,19 @@ int session_write(session *s, uint8_t *buf, size_t len)
 	return written;
 }
 
+// Values in data and delta_t should both be big-endian.
+int session_write_frame(session *s, uint8_t *data, uint32_t delta_t)
+{
+	uint8_t frame[FRAME_SIZE];
+	frame[0] = s->counter; // Frame counter
+	s->counter++;
+	memcpy(frame+1, &delta_t, 4); // Time since session start
+	memset(frame+5, 0, 3); // Unused bytes
+	// Memory usage can be reduced here if needed.
+	memcpy(frame+8, data, FRAME_SAMPLE_SIZE + CHANNELS); // ECG samples
+	return session_write(s, frame, FRAME_SIZE);
+}
+
 // Given a *char of length at least 11, get_fname stores a string of the
 // form "ecgses.XXX", where XXX is a hexadecimal integer between 0x0 and
 // 0xfff. If no such unused filename exists -1 will be returned,

@@ -6,8 +6,7 @@
 #include "session.h"
 #include "config.h"
 
-uint8_t frame_buf[FRAME_SIZE];
-uint8_t frame_counter;
+session *sess;
 
 void read_samples(uint8_t *buf) {
 	int ch;
@@ -18,21 +17,19 @@ void read_samples(uint8_t *buf) {
 		memcpy(buf+(4*ch), &v, 4);
 	}
 	#ifdef DEBUG
-	Serial.print("Read samples from ADC: ");
+	/*Serial.println("Read samples from ADC.");
 	for (ch = 0; ch < CHANNELS; ch++) {
 		Serial.print(buf[ch*4], HEX);
 		Serial.print(buf[ch*4+1], HEX);
 		Serial.print(buf[ch*4+2], HEX);
 		Serial.print(buf[ch*4+3], HEX);
 	}
-	Serial.println("");
+	Serial.println("");*/
 	#endif
 }
 
 int init_datalogger()
 {
-	frame_counter = 0;
-	memset(frame_buf, 0, FRAME_SIZE);
 	if (!SD.begin(PIN_SD_CHIPSELECT)) {
 		#ifdef DEBUG
 		Serial.println("Could not initialize SD card.");
@@ -43,8 +40,8 @@ int init_datalogger()
 	Serial.println("Initializing first session.");
 	#endif
 	uint64_t init_time = 1423297511ULL; // XXX: actually get time
-	session *s = session_init(init_time, CHANNELS);
-	if (s == NULL) {
+	sess = session_init(init_time, CHANNELS);
+	if (sess == NULL) {
 		#ifdef DEBUG
 		Serial.println("Could not initialize session.");
 		#endif
@@ -68,9 +65,11 @@ void state_error()
 
 void state_run()
 {
-	uint8_t buf[24];
+	uint8_t buf[FRAME_SAMPLE_SIZE*CHANNELS];
 	read_samples(buf);
-	delay(100);
+	uint32_t dt = swap_endian_32(millis());
+	session_write_frame(sess, buf, dt);
+	delay(4);
 }
 
 
