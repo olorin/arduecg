@@ -9,6 +9,7 @@ Work in progress, doesn't do much yet.
  - [Olimex EKG-EMG shield](https://www.olimex.com/Products/Duino/Shields/SHIELD-EKG-EMG/)
  - atmega328p-based Arduino with a μSD slot (I'm using the [Freetronics
    EtherTen](http://www.freetronics.com.au/products/etherten))
+ - DS1307 I2C real-time clock
  - μSD card
 
 # Preparation
