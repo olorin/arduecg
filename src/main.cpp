@@ -45,7 +45,7 @@ int init_ecg()
 	Serial.println("Initializing first session.");
 	#endif
 	uint64_t init_time = 1423297511ULL; // XXX: actually get time
-	session *s = session_init(init_time, FRAME_CHANNELS);
+	session *s = session_init(init_time, CHANNELS);
 	if (s == NULL) {
 		#ifdef DEBUG
 		Serial.println("Could not initialize session.");
