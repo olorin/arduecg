@@ -3,35 +3,33 @@
 #include <Arduino.h>
 
 #include "bits.h"
-#include "ecg.h"
 #include "session.h"
-#include "frame.h"
 #include "config.h"
 
 uint8_t frame_buf[FRAME_SIZE];
 uint8_t frame_counter;
 
-void state_error()
-{
-	#ifdef DEBUG
-	Serial.println("Entering error state.");
-	#endif
-	for (;;) {
-		digitalWrite(PIN_ERROR_LED, HIGH);
-		delay(500);
-		digitalWrite(PIN_ERROR_LED, LOW);
-		delay(500);
+void read_samples(uint8_t *buf) {
+	int ch;
+	uint32_t v;
+	for (ch = 0; ch < CHANNELS; ch++) {
+		// XXX: make this endianness-agnostic
+		v = swap_endian_32(analogRead(ch));
+		memcpy(buf+(4*ch), &v, 4);
 	}
+	#ifdef DEBUG
+	Serial.print("Read samples from ADC: ");
+	for (ch = 0; ch < CHANNELS; ch++) {
+		Serial.print(buf[ch*4], HEX);
+		Serial.print(buf[ch*4+1], HEX);
+		Serial.print(buf[ch*4+2], HEX);
+		Serial.print(buf[ch*4+3], HEX);
+	}
+	Serial.println("");
+	#endif
 }
 
-void state_run()
-{
-	uint8_t buf[24];
-	read_samples(buf);
-	delay(100);
-}
-
-int init_ecg()
+int init_datalogger()
 {
 	frame_counter = 0;
 	memset(frame_buf, 0, FRAME_SIZE);
@@ -55,6 +53,27 @@ int init_ecg()
 	return 0;
 }
 
+void state_error()
+{
+	#ifdef DEBUG
+	Serial.println("Entering error state.");
+	#endif
+	for (;;) {
+		digitalWrite(PIN_ERROR_LED, HIGH);
+		delay(500);
+		digitalWrite(PIN_ERROR_LED, LOW);
+		delay(500);
+	}
+}
+
+void state_run()
+{
+	uint8_t buf[24];
+	read_samples(buf);
+	delay(100);
+}
+
+
 void setup(void) 
 {
 	pinMode(PIN_ERROR_LED, OUTPUT);
@@ -63,7 +82,7 @@ void setup(void)
 	Serial.begin(9600);
 	Serial.println("ecg-datalogger initializing.");
 	#endif
-	if (init_ecg() != 0) {
+	if (init_datalogger() != 0) {
 		state_error();
 	}
 }
