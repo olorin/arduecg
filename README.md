@@ -14,7 +14,16 @@ Work in progress, doesn't do much yet.
 
 # Preparation
 
- - Format the SD card to FAT32.
+ - Format the SD card to FAT16.
+
+## Wiring
+
+ - Shield fits on the board in the usual way.
+ - DS3232:
+  - GND to GND
+  - VCC on the RTC to 5V on the shield
+  - SDA on the RTC to A4 on the shield
+  - SCL on the RTC to A5 on the shield
 
 # Building
 
