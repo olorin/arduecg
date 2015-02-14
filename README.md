@@ -47,7 +47,3 @@ make upload
  - avr-gcc
  - avr-libc
  - avrdude
-
-### Libraries
-
- - [Time](https://github.com/PaulStoffregen/Time)
