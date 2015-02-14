@@ -11,14 +11,14 @@
 // (2^32-1 milliseconds, just under 50 days).
 typedef struct {
 	// Session output file.
-	File fh; 
+	File fh;
 	// Time of session start.
-	uint64_t init_time;  
+	uint64_t init_time;
 	// Time delta (from init_time) of most recent frame.
-	uint32_t frame_time; 
+	uint32_t frame_time;
 	// Written out in hex as the 3-character session filename
 	// suffix.
-	int next_suffix;     
+	int next_suffix;
 	uint8_t counter;
 } session;
 

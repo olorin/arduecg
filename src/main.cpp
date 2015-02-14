@@ -73,7 +73,7 @@ void state_run()
 }
 
 
-void setup(void) 
+void setup(void)
 {
 	pinMode(PIN_ERROR_LED, OUTPUT);
 	pinMode(PIN_SD_HW_CHIPSELECT, OUTPUT);
