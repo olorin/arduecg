@@ -6,11 +6,19 @@
 
 #define SESSION_HEADER_SIZE 16
 
+// A session lasts from when the device is powered on to when it is
+// powered off, or until the frame timer has reached its maximum value
+// (2^32-1 milliseconds, just under 50 days).
 typedef struct {
-	File fh;
-	uint64_t init_time;
-	uint32_t frame_time;
-	int next_suffix;
+	// Session output file.
+	File fh; 
+	// Time of session start.
+	uint64_t init_time;  
+	// Time delta (from init_time) of most recent frame.
+	uint32_t frame_time; 
+	// Written out in hex as the 3-character session filename
+	// suffix.
+	int next_suffix;     
 	uint8_t counter;
 } session;
 
