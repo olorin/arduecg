@@ -26,6 +26,7 @@ void init_session_header(uint8_t* buf, uint64_t timestamp, uint16_t channels)
 	memcpy(buf+8, &be_ts, 8);
 }
 
+// Write `len` bytes from `buf` to the session file.
 int session_write(session *s, uint8_t *buf, size_t len)
 {
 	int written = s->fh.write(buf, len);
@@ -33,6 +34,8 @@ int session_write(session *s, uint8_t *buf, size_t len)
 	return written;
 }
 
+// Write a frame the session file. `data` should contain `CHANNELS`
+// samples from the device.
 // Values in data and delta_t should both be big-endian.
 int session_write_frame(session *s, uint8_t *data, uint32_t delta_t)
 {
@@ -68,6 +71,8 @@ int get_fname(char *fname, int base_suffix)
 	return (valid ? suf : -1);
 }
 
+// Initialize a session file and returns a session pointer. NULL on
+// error.
 session* session_init(uint64_t timestamp, uint16_t channels)
 {
 	session *s = (session*) malloc(sizeof(session));
@@ -109,6 +114,7 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 	return s;
 }
 
+// Close session file, free heap memory.
 void session_close(session *s)
 {
 	s->fh.close();
