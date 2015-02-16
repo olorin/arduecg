@@ -11,7 +11,7 @@ BOARD_TAG         = ethernet
 AVR_TOOLS_DIR     = /usr
 AVRDDUDE          = /usr/bin/avrdude
 
-ARDUINO_LIBS      = SPI SD
+ARDUINO_LIBS      = SPI SD Wire
 PROJECT_DIR       = $(CURDIR)
 ARDMK_DIR         = $(PROJECT_DIR)/../lib/ardmk
 USER_LIB_PATH    :=  $(PROJECT_DIR)/../lib
