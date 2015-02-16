@@ -2,6 +2,9 @@ This repository contains code for a datalogger based on the [Olimex
 EKG-EMG shield](https://www.olimex.com/Products/Duino/Shields/SHIELD-EKG-EMG/)
 on an Arduino-compatible atmega324 board.
 
+Out of the box it should support up to four ECG channels (if you have
+four EKG-EMG shields), but it's only been tested with one.
+
 Work in progress, doesn't do much yet.
 
 # Hardware
