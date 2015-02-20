@@ -18,6 +18,7 @@
 
 #define FRAME_SIZE (CHANNELS * FRAME_SAMPLE_SIZE +\
                     FRAME_TIMEOFFSET_SIZE +\
-                    FRAME_NUM_UNUSED)
+                    FRAME_NUM_UNUSED +\
+                    1) // Frame counter byte.
 
 #endif
