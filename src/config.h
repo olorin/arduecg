@@ -2,6 +2,7 @@
 #define H_CONFIG
 
 #define SAMPLE_RATE 256
+#define SAMPLE_INTERVAL (1024/SAMPLE_RATE) // close enough
 
 #define CHANNELS 1
 
