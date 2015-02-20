@@ -8,38 +8,38 @@
 #include "config.h"
 
 session *sess;
-volatile uint8_t ecg_samples[CHANNELS * FRAME_SAMPLE_SIZE];
-volatile uint8_t samples_waiting;
 
 // This will take at least 100*CHANNELS microseconds.
 void read_samples() {
 	int ch;
-	uint32_t v;
-	uint8_t *sample_buf;
+	uint32_t smpl;
+	uint8_t ecg_samples[CHANNELS * FRAME_SAMPLE_SIZE];
 
 	for (ch = 0; ch < CHANNELS; ch++) {
 		// XXX: make this endianness-agnostic
-		v = swap_endian_32(analogRead(ch));
-		sample_buf = ((uint8_t*)ecg_samples) + (4*ch);
-		memcpy(sample_buf, &v, 4);
+		smpl = swap_endian_32(analogRead(ch));
+		memcpy((void*)(ecg_samples + (4*ch)), &smpl, 4);
 	}
+	// XXX: millis() will be behind real time due to time spent in
+	//      the ISR; use the RTC instead.
+	uint32_t dt = swap_endian_32(millis());
+	session_write_frame(sess, (uint8_t*) ecg_samples, dt);
+	/*
 	#ifdef DEBUG
-	/*Serial.println("Read samples from ADC.");
+	Serial.println("Read samples from ADC.");
 	for (ch = 0; ch < CHANNELS; ch++) {
-		Serial.print(buf[ch*4], HEX);
-		Serial.print(buf[ch*4+1], HEX);
-		Serial.print(buf[ch*4+2], HEX);
-		Serial.print(buf[ch*4+3], HEX);
+		Serial.print(ecg_samples[ch*4], HEX);
+		Serial.print(ecg_samples[ch*4+1], HEX);
+		Serial.print(ecg_samples[ch*4+2], HEX);
+		Serial.print(ecg_samples[ch*4+3], HEX);
 	}
-	Serial.println("");*/
+	Serial.println("");
 	#endif
-	samples_waiting = 1;
+	*/
 }
 
 int init_datalogger()
 {
-	samples_waiting = 0;
-	timer_init(SAMPLE_INTERVAL, read_samples);
 	if (!SD.begin(PIN_SD_CHIPSELECT)) {
 		#ifdef DEBUG
 		Serial.println("Could not initialize SD card.");
@@ -57,6 +57,11 @@ int init_datalogger()
 		#endif
 		return -2;
 	}
+	delay(500);
+	#ifdef DEBUG
+	Serial.println("Enabling interrupt timer.");
+	#endif
+	timer_init(SAMPLE_INTERVAL, read_samples);
 	timer_start();
 	return 0;
 }
@@ -74,20 +79,6 @@ void state_error()
 	}
 }
 
-// This must take <4ms; make sure this is actually the case, or drop the
-// sample rate.
-void state_run()
-{
-	if (!samples_waiting) {
-		return;
-	}
-	samples_waiting = 0;
-	// XXX: millis() will be behind real time due to time spent in
-	//      the ISR; use the RTC instead.
-	uint32_t dt = swap_endian_32(millis());
-	session_write_frame(sess, (uint8_t*) ecg_samples, dt);
-}
-
 void setup(void)
 {
 	pinMode(PIN_ERROR_LED, OUTPUT);
@@ -102,5 +93,4 @@ void setup(void)
 }
 
 void loop(void) {
-	state_run();
 }
