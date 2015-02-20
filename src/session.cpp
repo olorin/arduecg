@@ -130,7 +130,7 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 	for (int i = 0; i < 16; i++) {
 		Serial.print(buf[i], HEX);
 	}
-	Serial.print('\n');
+	Serial.println("");
 	#endif
 	init_session_header(buf, timestamp, channels);
 	session_write(s, buf, SESSION_HEADER_SIZE);
