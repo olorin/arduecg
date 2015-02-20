@@ -46,7 +46,17 @@ int session_write_frame(session *s, uint8_t *data, uint32_t delta_t)
 	memcpy(frame+1, &delta_t, 4); // Time since session start
 	memset(frame+5, 0, 3); // Unused bytes
 	// Memory usage can be reduced here if needed.
-	memcpy(frame+8, data, FRAME_SAMPLE_SIZE + CHANNELS); // ECG samples
+	memcpy(frame+8, data, FRAME_SAMPLE_SIZE * CHANNELS); // ECG samples
+	/*
+	#ifdef DEBUG
+	int i;
+	for (i = 0; i < FRAME_SIZE; i++) {
+		Serial.print(frame[i], HEX);
+		Serial.print(" ");
+	}
+	Serial.println("");
+	#endif
+	*/
 	return session_write(s, frame, FRAME_SIZE);
 }
 
