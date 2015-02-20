@@ -125,14 +125,15 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 		return NULL;
 	}
 	uint8_t buf[SESSION_HEADER_SIZE];
+	init_session_header(buf, timestamp, channels);
 	#ifdef DEBUG
 	Serial.print("Writing session header: ");
 	for (int i = 0; i < 16; i++) {
 		Serial.print(buf[i], HEX);
+		Serial.print(" ");
 	}
 	Serial.println("");
 	#endif
-	init_session_header(buf, timestamp, channels);
 	session_write(s, buf, SESSION_HEADER_SIZE);
 	return s;
 }
