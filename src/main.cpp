@@ -8,9 +8,17 @@
 #include "config.h"
 
 session *sess;
+volatile uint8_t isr_lock;
 
 // This will take at least 100*CHANNELS microseconds.
 void read_samples() {
+	if (isr_lock) {
+		#ifdef DEBUG
+		Serial.println("Hit ISR lock - timing is wrong, try lowering sample rate.");
+		#endif
+		return;
+	}
+	isr_lock = 1;
 	int ch;
 	uint32_t smpl;
 	uint8_t ecg_samples[CHANNELS * FRAME_SAMPLE_SIZE];
@@ -40,10 +48,12 @@ void read_samples() {
 	Serial.println("");
 	#endif
 	*/
+	isr_lock = 0;
 }
 
 int init_datalogger()
 {
+	isr_lock = 0;
 	if (!SD.begin(PIN_SD_CHIPSELECT)) {
 		#ifdef DEBUG
 		Serial.println("Could not initialize SD card.");
