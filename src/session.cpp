@@ -30,7 +30,7 @@ void init_session_header(uint8_t* buf, uint64_t timestamp, uint16_t channels)
 int session_write(session *s, uint8_t *buf, size_t len)
 {
 	int written = s->fh.write(buf, len);
-	s->fh.flush();
+	(s->fh).flush();
 	return written;
 }
 
@@ -98,12 +98,17 @@ int get_fname(char *fname, int base_suffix)
 // error.
 session* session_init(uint64_t timestamp, uint16_t channels)
 {
-	session *s = (session*) malloc(sizeof(session));
+	char fname[11];
+	int next_suffix;
+	int written;
+	uint8_t buf[SESSION_HEADER_SIZE];
+	session *s;
+
+	s = (session*) malloc(sizeof(session));
 	if (s == NULL) {
 		return NULL;
 	}
-	char fname[11];
-	int next_suffix = get_fname(fname, 0);
+	next_suffix = get_fname(fname, 0);
 	if (next_suffix < 0) {
 		#ifdef DEBUG
 		Serial.println("Could not find an unused filename.");
@@ -124,7 +129,6 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 		free(s);
 		return NULL;
 	}
-	uint8_t buf[SESSION_HEADER_SIZE];
 	init_session_header(buf, timestamp, channels);
 	#ifdef DEBUG
 	Serial.print("Writing session header: ");
@@ -134,7 +138,13 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 	}
 	Serial.println("");
 	#endif
-	session_write(s, buf, SESSION_HEADER_SIZE);
+	written = session_write(s, buf, SESSION_HEADER_SIZE);
+	if (written != SESSION_HEADER_SIZE) {
+		#ifdef DEBUG
+		Serial.println("Error writing session header.");
+		#endif
+		return NULL;
+	}
 	return s;
 }
 

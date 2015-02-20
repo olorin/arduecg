@@ -19,6 +19,7 @@ void read_samples() {
 		return;
 	}
 	isr_lock = 1;
+
 	int ch;
 	uint32_t smpl;
 	uint8_t ecg_samples[CHANNELS * FRAME_SAMPLE_SIZE];
