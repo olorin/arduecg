@@ -23,7 +23,11 @@ void read_samples() {
 	// XXX: millis() will be behind real time due to time spent in
 	//      the ISR; use the RTC instead.
 	uint32_t dt = swap_endian_32(millis());
-	session_write_frame(sess, (uint8_t*) ecg_samples, dt);
+	if (session_write_frame(sess, (uint8_t*) ecg_samples, dt) != 0) {
+		#ifdef DEBUG
+		Serial.println("Error writing frame.");
+		#endif
+	}
 	/*
 	#ifdef DEBUG
 	Serial.println("Read samples from ADC.");

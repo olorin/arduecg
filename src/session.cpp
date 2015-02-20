@@ -40,6 +40,8 @@ int session_write(session *s, uint8_t *buf, size_t len)
 int session_write_frame(session *s, uint8_t *data, uint32_t delta_t)
 {
 	uint8_t frame[FRAME_SIZE];
+	int written;
+
 	frame[0] = s->counter; // Frame counter
 	s->counter++;
 	s->frame_time = delta_t;
@@ -57,7 +59,18 @@ int session_write_frame(session *s, uint8_t *data, uint32_t delta_t)
 	Serial.println("");
 	#endif
 	*/
-	return session_write(s, frame, FRAME_SIZE);
+	written = session_write(s, frame, FRAME_SIZE);
+	if (written != FRAME_SIZE) {
+		#ifdef DEBUG
+		Serial.print("Tried to write frame of ");
+		Serial.print(FRAME_SIZE);
+		Serial.print(" bytes, only wrote ");
+		Serial.print(written);
+		Serial.println(" bytes.");
+		#endif
+		return -1;
+	}
+	return 0;
 }
 
 // Given a *char of length at least 11, get_fname stores a string of the
