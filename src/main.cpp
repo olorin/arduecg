@@ -65,7 +65,7 @@ int init_datalogger()
 	Serial.println("Initializing first session.");
 	#endif
 	uint64_t init_time = 1423297511ULL; // XXX: actually get time
-	sess = session_init(init_time, CHANNELS);
+	sess = session_init(init_time, CHANNELS, SAMPLE_RATE);
 	if (sess == NULL) {
 		#ifdef DEBUG
 		Serial.println("Could not initialize session.");
@@ -108,4 +108,5 @@ void setup(void)
 }
 
 void loop(void) {
+	// Everything done inside the read_samples ISR.
 }

@@ -14,7 +14,9 @@ A file header shall be `16` bytes as follows:
  - 1:     Magic number, `0xec`.
  - 2:     Magic number, `0x09`.
  - 3:     Format version, `0x00`.
- - 4-6:   Unused.
+ - 4:     Unused.
+ - 5-6:   Unsigned big-endian integer `F`, the nominal sample frequency
+          of recording in hertz.
  - 7-8:   Unsigned big-endian integer `S`, the number of channels
           (equivalently, samples per frame).
  - 9-16:  Unsigned big-endian integer representing the number of

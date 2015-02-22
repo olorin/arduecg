@@ -9,14 +9,14 @@
 
 #include "config.h"
 
-void init_session_header(uint8_t* buf, uint64_t timestamp, uint16_t channels)
+void init_session_header(uint8_t* buf, uint64_t timestamp, uint16_t channels, uint16_t freq)
 {
 	buf[0] = 0xec; // Magic #1.
 	buf[1] = 0x09; // Magic #2.
 	buf[2] = 0x00; // Format epoch.
-	buf[3] = 0x00; // Unused 1.
-	buf[4] = 0x00; // Unused 2.
-	buf[5] = 0x00; // Unused 3.
+	buf[3] = 0x00; // Unused.
+	uint16_t be_freq = swap_endian_16(freq);
+	memcpy(buf+4, &be_freq, 2);
 	uint16_t be_channels = swap_endian_16(channels);
 	memcpy(buf+6, &be_channels, 2);
 	// Last eight bytes are for the timestamp.
@@ -94,9 +94,7 @@ int get_fname(char *fname, int base_suffix)
 	return (valid ? suf : -1);
 }
 
-// Initialize a session file and returns a session pointer. NULL on
-// error.
-session* session_init(uint64_t timestamp, uint16_t channels)
+session* session_init(uint64_t timestamp, uint16_t channels, uint16_t freq)
 {
 	char fname[11];
 	int next_suffix;
@@ -129,7 +127,7 @@ session* session_init(uint64_t timestamp, uint16_t channels)
 		free(s);
 		return NULL;
 	}
-	init_session_header(buf, timestamp, channels);
+	init_session_header(buf, timestamp, channels, freq);
 	#ifdef DEBUG
 	Serial.print("Writing session header: ");
 	for (int i = 0; i < 16; i++) {
