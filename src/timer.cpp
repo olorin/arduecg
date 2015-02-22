@@ -3,6 +3,9 @@
 
 #include "timer.h"
 
+#define CLEAR_BIT(x, bit) x &= ~(1 << bit)
+#define SET_BIT(x, bit) x |= (1 << bit)
+
 // Number of times the counter has timer_overflowed.
 volatile uint32_t timer_ticks;
 // Number of times the counter must overflow before triggering the
@@ -24,21 +27,23 @@ void timer_init(uint32_t interval, void (*f)())
 
 	// Disable overflow interrupt (until we actually want to start
 	// the timer).
-	TIMSK2 &= ~(1 << TOIE2);
+	CLEAR_BIT(TIMSK2, TOIE2);
 	// Ensure we're in normal counter mode.
-	TCCR2A &= ~((1 << WGM21) | (1 << WGM20));
-	TCCR2B &= ~(1 << WGM22);
+	CLEAR_BIT(TCCR2A, WGM21);
+	CLEAR_BIT(TCCR2A, WGM20);
+	CLEAR_BIT(TCCR2B, WGM22);
 	// Use the IO clock rather than an external oscillator.
-	ASSR &= ~(1 << AS2);
+	CLEAR_BIT(ASSR, AS2);
 	// Disable compare match A interrupt.
-	TIMSK2 &= ~(1<<OCIE2A);
+	CLEAR_BIT(TIMSK2, OCIE2A);
 
 	// XXX: assumes we're running at 16MHz. If not, use a
 	// different prescaler.
 	
 	// Use a prescaler of 64.
-	TCCR2B |= (1<<CS22);
-	TCCR2B &= ~((1 << CS21) | (1 << CS20));
+	SET_BIT(TCCR2B, CS22);
+	CLEAR_BIT(TCCR2B, CS21);
+	CLEAR_BIT(TCCR2B, CS20);
 
 	// Timer register gets set to this so it overflows in
 	// TIMER_RESOLUTION seconds.
@@ -53,7 +58,7 @@ void timer_start()
 	// from this value and trigger an interrupt on overflow.
 	TCNT2 = tcnt2_init;
 	// Enable overflow interrupts.
-	TIMSK2 |= (1 << TOIE2);
+	SET_BIT(TIMSK2, TOIE2);
 }
 
 void overflow()
