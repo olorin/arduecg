@@ -108,5 +108,7 @@ void setup(void)
 }
 
 void loop(void) {
-	// Everything done inside the read_samples ISR.
+	// Everything done inside the read_samples ISR, so we sleep to
+	// save power.
+	__asm__ __volatile__ ("sleep");
 }
