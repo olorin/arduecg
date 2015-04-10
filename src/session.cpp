@@ -7,7 +7,7 @@
 #include "session.h"
 #include "bits.h"
 
-#include "config.h"
+#include "constants.h"
 
 void init_session_header(uint8_t* buf, uint64_t timestamp, uint16_t channels, uint16_t freq)
 {

@@ -5,7 +5,7 @@
 #include "bits.h"
 #include "session.h"
 #include "timer.h"
-#include "config.h"
+#include "constants.h"
 
 session *sess;
 volatile uint8_t isr_lock;

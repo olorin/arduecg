@@ -1,24 +1,20 @@
+/* Compile-time configuration options. Tweak these according to your
+ * hardware setup or whim. */
+
 #ifndef H_CONFIG
 #define H_CONFIG
 
-#define SAMPLE_RATE 32
-#define SAMPLE_INTERVAL (1024/SAMPLE_RATE) // close enough
-
+/* Set this to the number of ECG channels your hardware provides; this
+ * will almost always be equal to the number of EKG-EMG shield boards
+ * you're using. */
 #define CHANNELS 1
 
-#define PIN_SD_HW_CHIPSELECT 10
-#define PIN_SD_CHIPSELECT 4
-#define PIN_ERROR_LED 9
+/* Uncomment this to print debugging information to the serial 
+ * console. */
+//#define DEBUG 1
 
-#define DEBUG 1
-
-#define FRAME_SAMPLE_SIZE 4
-#define FRAME_TIMEOFFSET_SIZE 4
-#define FRAME_NUM_UNUSED 3
-
-#define FRAME_SIZE (CHANNELS * FRAME_SAMPLE_SIZE +\
-                    FRAME_TIMEOFFSET_SIZE +\
-                    FRAME_NUM_UNUSED +\
-                    1) // Frame counter byte.
+/* Sample rate in hertz - can be adjusted as desired, the maximum I've
+ * successfully used is 256 (on an atmega328p). */
+#define SAMPLE_RATE 32
 
 #endif

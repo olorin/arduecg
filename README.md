@@ -41,9 +41,20 @@ session initialization times are not currently valid.
 
 # Building
 
+## Dependencies
+
 This project uses [sudar's Arduino Makefile
-template](https://github.com/sudar/Arduino-Makefile); it's copied here
-under `lib/ardmk`.
+template](https://github.com/sudar/Arduino-Makefile); a copy is included
+in this repository under `lib/ardmk`.
+
+No additional dependencies beyond the Arduino standard libraries are required.
+
+## Configuration
+
+Read over the options in `src/config.h`; you may need to adjust these
+according to your hardware or other requirements.
+
+## Compilation
 
 ```sh
 export MONITOR_PORT=/path/to/your/device
@@ -52,10 +63,6 @@ cd src
 make
 make upload
 ```
-
-## Dependencies
-
-No libraries beyond the Arduino standard libraries are required.
 
 ### Tools
 
