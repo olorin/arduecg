@@ -42,8 +42,8 @@ session initialization times are not currently valid.
 # Building
 
 This project uses [sudar's Arduino Makefile
-template](https://github.com/sudar/Arduino-Makefile); it's a submodule
-of this repository, so make sure it's cloned before building.
+template](https://github.com/sudar/Arduino-Makefile); it's copied here
+under `lib/ardmk`.
 
 ```sh
 export MONITOR_PORT=/path/to/your/device
